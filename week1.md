@@ -80,3 +80,43 @@
 - 블록체인
     - 중앙서버가 존재하지 않으므로 누가 처리할 것인지 정해져 있지 않고 매번 바뀜
     - 브로드캐스팅 또는 가십 프로토콜: 블록체인에서는 기본적으로 모든 거래 내역서를 전체 참여자에게 알려야 함
+
+# 2022.09.06(화)
+## Vincent Driessen의 브랜칭 모델
+
+<img src="./img/git-flow.png">
+
+Vincent Driessen의 브랜칭 모델에는 5개의 브랜치가 사용된다.
+
+- master
+- develop
+- feature
+    - 새로운 기능 개발이나 버그 수정을 위한 일련의 코드 수정이 이뤄지는 브랜치다. 이 브랜치에서 개발자 혼자 작업을 할 수도 있고, 특정 기능 개발을 위한 여러명의 개발자들이 공동으로 작업할 수도 있다.
+    - feature 브랜치에서 작업된 내용은 최종적으로 PR을 거쳐 develop 브랜치에 병합(Merge)된다.
+- release
+- hotfix
+
+## **git-flow 사용법**
+
+```python
+$ git clone [repo url]
+
+//git 저장소를 git-flow에 맞게 초기화
+$ git flow init -d
+
+//develop 브랜치에서 feature/[기능 이름] 브랜치를 만들고 이동
+$git checkout -b feature/[기능 이름] develop
+
+//기능 개발 완료 후(develop ← feature 병합 후 브랜치 삭제)
+$ git flow feature finish <branch_name>
+
+//원격 저장소 반영
+$ git push origin master
+```
+
+<aside>
+💡 소스트리 사용
+
+[0원으로 현업 환경을 설정해보자! Git Flow(Sourcetree) (tistory.com)](https://hucet.tistory.com/89#:~:text=git%20flow%20%EB%A5%BC%20%EC%B4%88%EA%B8%B0%ED%99%94%20%ED%95%98%EA%B8%B0%20%EC%9C%84%ED%95%B4%EC%84%A0%20%EC%95%84%EB%9E%98%20%EA%B8%B0%EB%8A%A5%EC%9D%84,%EC%A0%80%EC%9E%A5%EC%86%8C%20%EC%B4%88%EA%B8%B0%ED%99%94%EB%A5%BC%20%EC%8B%A4%ED%96%89%ED%95%98%EB%A9%B4%20%EC%95%84%EB%9E%98%EC%99%80%20%EA%B0%99%EC%9D%B4%20develop%20%EB%B8%8C%EB%9E%9C%EC%B9%98%EA%B0%80%20%EC%83%9D%EC%84%B1%EB%90%A9%EB%8B%88%EB%8B%A4.)
+
+</aside>
