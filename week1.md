@@ -120,3 +120,44 @@ $ git push origin master
 [0원으로 현업 환경을 설정해보자! Git Flow(Sourcetree) (tistory.com)](https://hucet.tistory.com/89#:~:text=git%20flow%20%EB%A5%BC%20%EC%B4%88%EA%B8%B0%ED%99%94%20%ED%95%98%EA%B8%B0%20%EC%9C%84%ED%95%B4%EC%84%A0%20%EC%95%84%EB%9E%98%20%EA%B8%B0%EB%8A%A5%EC%9D%84,%EC%A0%80%EC%9E%A5%EC%86%8C%20%EC%B4%88%EA%B8%B0%ED%99%94%EB%A5%BC%20%EC%8B%A4%ED%96%89%ED%95%98%EB%A9%B4%20%EC%95%84%EB%9E%98%EC%99%80%20%EA%B0%99%EC%9D%B4%20develop%20%EB%B8%8C%EB%9E%9C%EC%B9%98%EA%B0%80%20%EC%83%9D%EC%84%B1%EB%90%A9%EB%8B%88%EB%8B%A4.)
 
 </aside>
+
+
+# 2022.09.07(수)
+## [Python][프로그래머스 Lv.1] 예산
+### 나의 풀이
+
+```Python
+def solution(d, budget):
+    answer = 0
+    d.sort()
+    for i in range(len(d)):
+        budget -= d[i]
+        if budget >= 0:
+            answer += 1
+        else:
+            return answer
+    return len(d)
+```
+sort() 함수는 리스트를 오름차순으로 정렬해주는 함수이다.
+
+budget에서 d[i]를 뺀 후 0보다 크거나 같으면 예산이 부족하지 않아 부서에 물품 지원이 가능한 것이므로 answer에 1을 더해주고, 0보다 작으면 answer를 return해준다.
+
+for 문을 다 돌았는데도 return되지 않으면 모든 부서의 물품을 구매해준 것이므로 부서 d의 길이를 return해준다.
+
+### 다른 사람의 풀이
+
+```Python
+def solution(d, budget):
+    d.sort()
+    while budget < sum(d):
+        d.pop()
+    return len(d)
+```
+
+sort()로 정렬해준 후 d의 합이 budget보다 작거나 같아질 때까지 d에서 pop해준다.
+
+d의 합이 budget보다 작거나 같아지면 while 문을 빠져나와 d의 길이를 return해준다.
+
+
+보기 좋지만, 신청한 부서가 많고 예산이 적으면 부담이 되는 코드이다.
+sum()이 반복되어 시간 복잡도가 O(n^2)이므로 매번 원소 값을 하나씩 빼는 (O(n)) 풀이가 나을 것 같다.
