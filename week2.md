@@ -99,3 +99,121 @@ def solution(p):
                 return '('+solution(p[i+1:])+')'+''.join(list(map(lambda x:'(' if x==')' else ')',p[1:i]) ))
 ```
 lambda를 써보는 연습을 해봐야겠다..
+
+# 2022.09.13(화)
+## 이더리움 & 솔리디티 기반의 투표 dApp 구현하기
+
+1. 솔리디티를 사용하여 스마트 컨트랙트 작성
+    
+    솔리디티: 스마트 컨트랙트를 작성하기 위한 언어
+    
+2. 스마트 컨트랙트를 컴파일하고 블록체인에 배포
+3. node.js 콘솔에서 테스트하고 웹페이지와 상호작용
+
+### 목표
+
+탈중앙화 서버이므로 애플리케이션을 강제 종료하는 게 불가능함
+
+후보자 정보를 초기화하고, 투표하면 투표 정보가 블록체인에 저장됨
+
+voting이라는 컨트랙트를 작성
+
+### 투표 dAPP 구조
+
+<img src="./img/투표 dApp 구조.png">
+
+가나슈(개발 목적으로만 쓰이는 가짜 블록체인) 설치 필요
+
+스마트 컨트랙트 작성, 블록체인에 배포
+
+커맨드라인을 통해 상호작용, 웹페이지를 통해 상호작용
+
+블록체인과 상호작용하려면 RPC 필요
+
+Web3JS: RPC 호출을 추출하는 라이브러리, 자바스크립트로 블록체인과 상호작용하게 해줌
+
+### 환경설정
+
+npm 패키지 설치
+
+1. 솔리디티 컴파일러
+2. web3.js
+3. 가나슈
+
+```python
+// ganache-cli 설치
+$ npm install -g ganache-cli
+
+// node에 접속
+$ node
+
+> Web3 = require('web3')
+> web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+// 생성된 10개의 계정을 확인
+> web3.eth.getAccounts (console.log)
+
+// 생성된 계정을 확인하는 방법2
+$ ganache-cli -d -m tutorial
+```
+
+<img src="./img/ganache.png">
+
+```python
+// 계정에 100이더가 있는지 확인
+> web3.eth.getBalance('0xf76c9b7012c0a3870801eaaddb93b6352c8893db')
+BigNumber { s: 1, e: 20, c: [ 1000000 ] }
+
+> web3.eth.getBalance('0xf76c9b7012c0a3870801eaaddb93b6352c8893db').toNumber()
+100000000000000000000
+
+//웨이 단위 -> 이더 단위로 변환
+> web3.fromWei('100000000000000000000', 'ether')
+'100'
+```
+
+### 컨트랙트 작성
+
+<img src="./img/투표 디앱.png">
+
+<img src="./img/voting 설명.png">
+
+```Solidity
+pragma solidity ^0.4.23;
+
+contract Voting {
+    // 후보자를 초기화할 생성자
+    // 후보자에게 투표하는 기능
+    // 각 후보자가 얻은 표 계산
+
+    bytes32[] public candidateList;
+
+    // 각 후보자의 득표 수 추적하기 위해 mapping 사용
+    mapping (bytes32 => uint8) public votesReceived;
+
+    //constructor 생성자, byte32 자료형(배열을 지원하지 않음)
+    constructor(bytes32[] candidateNames) public { 
+        candidateList = candidateNames;
+    }
+    function voteForCandidate(bytes32 candidate) public {
+        // 유효하지 않으면 다음 행으로 넘어가지 않음
+        require(validCandidate(candidate));
+        votesReceived[candidate] += 1;
+    }
+
+    // view는 읽기 전용 함수를 나타냄
+    function totalVotesFor(bytes32 candidate) view public returns(uint8) {
+        require(validCandidate(candidate));
+        return votesReceived[candidate];
+    }
+
+    // 유효한 후보인지 체크
+    function validCandidate(byte32 candidate) view public returns(bool) {
+        for (uint i=0; i<candidateList.length; i++) {
+            if (candidateList[i] == candidate) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
