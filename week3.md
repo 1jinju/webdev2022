@@ -39,3 +39,52 @@ def solution(s):
 ```
 0, 1로만 이루어진 문자열이므로 len(s)에서 문자열 내 1의 개수를 빼면 사라질 0의 개수가 나온다.
 나머지는 비슷하다.
+
+
+# 2022.09.20(화)
+
+## [Python][백준 2525번] 오븐 시계
+
+### 틀린 풀이
+```Python
+h, m = map(int, input().split())
+c = int(input())
+count = 0
+
+while c > 60:
+    c %= 60
+    count += 1
+
+c_hour = count
+
+if h+c_hour < 24 and m+c < 60:
+    print(h+c_hour, m+c, sep=' ')
+elif h+c_hour >= 24 and m+c < 60:
+    print(h+c_hour-24, m+c, sep=' ')
+elif h+c_hour >= 24 and m+c >= 60:
+    print(h+c_hour-23, m+c-60, sep=' ')
+else:
+    if h+c_hour+1 >=24:
+        print(h+c_hour-23, m+c-60, sep=' ')
+    else:
+        print(h+c_hour+1, m+c-60, sep=' ')
+```
+c를 60으로 나눈 몫을 c_hour에 저장하고, 60으로 나눈 나머지를 c에 저장했어야 했는데 잘못 풀었다.
+
+### 맞은 풀이
+```Python
+h, m = map(int, input().split())
+c = int(input())
+
+minute = m+c
+
+while minute >= 60:
+    minute -= 60
+    h += 1
+if h >= 24:
+    print(h-24, minute)
+else:
+    print(h, minute)
+```
+minute이 60보다 작을 때까지 계속 60을 빼주고, 빼줄 때마다 h에 1을 더해준다.
+위의 풀이보다 보기 편해졌다. 
