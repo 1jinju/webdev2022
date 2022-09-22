@@ -320,8 +320,6 @@ int BSearchRecur(int ar[], int first, int last, int target) {
 }
 ```
 
----
-
 ## 02-3 하노이 타워
 
 하나의 막대에 쌓여 있는 원반을 다른 하나의 원반에 그대로 옮기는 방법
