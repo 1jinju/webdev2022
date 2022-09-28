@@ -1,4 +1,4 @@
-# 2022.09.27(월)
+# 2022.09.27(화)
 
 # 1-1. 공간 혁명과 임베디드 시스템
 
@@ -42,3 +42,70 @@
 - 전체 장치의 일부분으로 구성되며 제어와 모니터링이 필요한 시스템을 위한 두뇌 역할을 하는 특정 목적의 컴퓨터 시스템
 - 어떤 특정한 기능을 위해 특화된 시스템(1940-1990년, 현관문 OPEN)
 - 특별한 목적으로 설계된 하드웨어를 제어하기 위한 시스템으로 그 내부에 컴퓨터가 내장된(embedded) 시스템
+
+# 2022.09.28(수)
+
+## [Python][백준 2480번] 주사위 세개
+
+### 틀린 풀이
+```Python
+a, b, c = map(int, input().split())
+max = a
+
+def num_same(a, b, c):
+	# 모두 다를 때
+	if a != b and b != c and a != c:
+		return 1
+	# 두 개가 같을 때
+	elif (a==b and b!=c) or (b==c and a!=c) or (a==c and b!=c):
+		return 2
+	# 모두 같을 때
+	elif a==b and b==c:
+		return 3
+		
+if num_same(a,b,c) == 1:
+	if b > max:
+		b = max
+	if c > max:
+		c = max
+	print(max*100)
+elif num_same(a,b,c) == 2:
+	if (a==b and b!=c) or (a==c and b!=c):
+		print(1000+a*100)
+	elif b==c and a!=c:
+		print(1000+b*100)
+elif num_same(a,b,c) == 3:
+	print(10000+a*1000)
+```
+max에 b를 집어넣어야 했는데 b에 max를 집어넣어서 틀렸다.
+
+### 맞은 풀이
+```Python
+a, b, c = map(int, input().split())
+max = a
+
+def num_same(a, b, c):
+	# 모두 다를 때
+	if a != b and b != c and a != c:
+		return 1
+	# 두 개가 같을 때
+	elif (a==b and b!=c) or (b==c and a!=c) or (a==c and b!=c):
+		return 2
+	# 모두 같을 때
+	elif a==b and b==c:
+		return 3
+		
+if num_same(a,b,c) == 1:
+	if b > max:
+		max = b
+	if c > max:
+		max = c
+	print(max*100)
+elif num_same(a,b,c) == 2:
+	if (a==b and b!=c) or (a==c and b!=c):
+		print(1000+a*100)
+	elif b==c and a!=c:
+		print(1000+b*100)
+elif num_same(a,b,c) == 3:
+	print(10000+a*1000)
+```
