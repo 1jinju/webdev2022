@@ -301,3 +301,30 @@ LData LRemove(List *plist) {
     배열의 길이가 초기에 결정되어야 하고, 변경이 불가능하다.
     
     삭제 과정에서 데이터 이동(복사)이 빈번히 일어난다.
+
+# 2022.09.30(금)
+## [Python][프로그래머스 Lv.2] 최댓값과 최솟값
+
+### 나의 풀이
+
+```Python
+def solution(s):
+    answer = ''
+    lst = []
+    lst = s.split()
+    for i in range(len(lst)):
+        if lst[i].find('-') != -1:
+            lst[i] = -int(lst[i][1:])
+        else:
+            lst[i] = int(lst[i])
+    m = [str(min(lst)), str(max(lst))]
+    answer = ' '.join(m)
+    return answer
+```
+
+### 다른 사람의 풀이
+```Python
+def solution(s):
+    s = list(map(int,s.split()))
+    return str(min(s)) + " " + str(max(s))
+```
