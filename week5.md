@@ -430,3 +430,34 @@ def compute_postfix(outStack):
                 temp.push(operand2/operand1)
     return temp.pop()
 ```
+
+# 2022.10.07(금)
+
+## [Python][백준 1110번] 더하기 사이클
+### 나의 풀이
+```Python
+# N%10*10+(N//10+N%10)%10 중복
+import sys
+N = int(sys.stdin.readline())
+new = N%10*10+(N//10+N%10)%10
+cycle = 1 
+n = 0
+while new != N:
+    n = new
+    new = n%10*10+(n//10+n%10)%10
+    cycle += 1
+print(cycle)
+```
+```Python
+import sys
+N = int(sys.stdin.readline())
+cycle = 0
+new = 0
+n = N
+while new != N:
+    new = n%10*10+(n//10 + n%10)%10
+    cycle += 1
+    n = new
+print(cycle)
+```
+N%10*10+(N//10+N%10)%10처럼 두 번 중복되는 코드를 하나로 줄였다.
