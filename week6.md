@@ -32,3 +32,42 @@ for i in range(1, 10001):
         print(i)
 ```
 while 문을 없애서 시간복잡도를 줄였다.
+
+# 2022.10.12(수)
+
+## [Python][백준 1065번] 한수
+
+### 나의 풀이
+```Python
+def solution(n):
+    lst = []
+    count = 0
+    if n < 100:
+        count = n 
+    else:
+        count += 99
+        for i in range(100, n+1):
+            lst = list(map(int, str(i)))
+            if ((lst[2]-lst[1]) == (lst[1]-lst[0])):
+                count += 1
+    return count
+```
+입력 안 받아서 틀렸다.
+
+```Python
+def solution(n):
+    lst = []
+    count = 0
+    if n < 100:
+        count = n 
+    else:
+        count += 99
+        for i in range(100, n+1):
+            lst = list(map(int, str(i)))
+            if ((lst[0]-lst[1]) == lst[1]-lst[2]):
+                count += 1
+    return count
+
+n = int(input())
+print(solution(n))
+```
