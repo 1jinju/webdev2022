@@ -71,3 +71,19 @@ def solution(n):
 n = int(input())
 print(solution(n))
 ```
+
+# 2022.10.13(목)
+
+## [Python][백준 4344번] 평균은 넘겠지
+### 나의 풀이
+```Python
+import sys
+n = int(input())
+for i in range(n):
+    lst = list(map(int, sys.stdin.readline().split()))
+    count = 0
+    for j in range(1, lst[0]+1):
+        if lst[j]>((sum(lst)-lst[0])/lst[0]):
+            count += 1
+    print("{:.3f}".format(count/lst[0]*100), '%', sep='')
+```
