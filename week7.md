@@ -135,3 +135,167 @@ class tree:
       v.R = Node(data,None,None,v)
       self.n+=1
 ```
+
+
+# 2022.10.18(화)
+# 08-3 이진 트리의 순회
+
+- 전위 순회: 루트 노드를 먼저 방문
+- 중위 순회: 루트 노드를 중간에 방문
+- 후위 순회: 루트 노드를 마지막에 방문
+
+## 순회의 재귀적 표현
+
+- 중위 순회
+    
+    ```python
+    def inorder(self, n):
+    	if n != None:
+    		if n.left:
+    			self.inorder(n.left)
+    		print(n.item, end='') # 노드 방문
+    		if n.right:
+    			self.inorder(n.right)
+    ```
+    
+- 전위 순회
+    
+    ```python
+    def preorder(self, n):
+    	if n != None:
+    		print(n.item, end='') # 노드 방문
+    		if n.left:
+    			self.inorder(n.left)
+    		if n.right:
+    			self.inorder(n.right)
+    ```
+    
+- 후위 순회
+    
+    ```python
+    def postorder(self, n):
+    	if n != None:
+    		if n.left:
+    			self.inorder(n.left)
+    		if n.right:
+    			self.inorder(n.right)
+    		print(n.item, end='') # 노드 방문
+    ```
+    
+
+# 08-4 수식 트리의 구현
+
+## 수식 트리
+
+이진 트리를 이용해서 수식을 표현해 놓은 것
+
+
+루트 노드에 저장된 연산자의 연산을 하되, 두 개의 자식 노드에 저장된 두 피연산자를 대상으로 연산을 한다.
+
+중위 표기법의 수식→ 후위 표기법의 수식→ 수식 트리
+
+- 수식 트리의 구성과정에서 피연산자는 무조건 스택으로 옮긴다
+- 연산자를 만나면 스택에 쌓여있는 두 개의 피연산자를 꺼내어 자식 노드로 연결한다.
+- 자식 노드를 연결해서 만들어진 트리는 다시 스택으로 옮긴다.
+
+```Python
+import re
+
+def postfix_convert(infix):
+    stk = [] # 스택
+    cal = []
+    expression = re.sub('([\+\-\*\/\(\)])', '\g<1>', infix)
+    print("Postfix: ", end="")
+
+    for x in expression.split():
+        if x == '(':
+            stk.append(x)
+        elif x == '+' or x == '-':
+            if '+' in stk or '-' in stk or '*' in stk or '/' in stk:
+                pop_stk = stk.pop()
+                if pop_stk == '(':
+                    stk.append(pop_stk)
+                    stk.append(x)
+                else:
+                    stk.append(pop_stk)
+                    print(stk.pop(), end=" ")
+                    cal.append(pop_stk)
+                    stk.append(x)
+            else:
+                stk.append(x)
+        elif x == "*" or x == '/':
+            if '*' in stk or '/' in stk:
+                print(stk.pop(), end=" ")
+                cal.append(stk.pop())
+                stk.append(x)
+            else:
+                stk.append(x)
+        elif x == ")":
+            while stk:
+                p = stk.pop()
+                if p == "(":
+                    continue
+                else:
+                    print(p, end=" ")
+                    cal.append(p)
+        else:
+            print(x, end=" ")
+            cal.append(x)
+    while stk:
+        pop_stk2 = stk.pop()
+        print(pop_stk2, end=" ")
+        cal.append(pop_stk2)
+    return cal
+
+class Node(object):
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+def create_expression_tree(infix):
+    postfix = postfix_convert(infix)
+    print("\n")
+    stack = []
+    cal_stack = []
+    operator_precedance = {'(', ')', '+', '-', '*', '/'}
+
+    for char in postfix:
+        if char not in operator_precedance:
+            node = Node(char)
+            stack.append(node)
+            cal_stack.append(node)
+        else:
+            node = Node(char)
+            right = stack.pop()
+            left = stack.pop()
+            node.right = right
+            node.left = left
+            stack.append(node)
+            print(char, "-> [child:", node.left.value, ", silbling:", node.right.value, "]")
+            print()
+            cal_right = cal_stack.pop()
+            cal_left = cal_stack.pop()
+            # 사칙연산 계산
+            if char == "+":
+                cal = float(cal_left.value) +float(cal_right.value)
+                cal_node = Node(cal)
+                cal_stack.append(cal_node)
+            elif char == "-":
+                cal = float(cal_left.value) - float(cal_right.value)
+                cal_node = Node(cal)
+                cal_stack.append(cal_node)
+            elif char == "*":
+                cal = float(cal_left.value) * float(cal_right.value)
+                cal_node = Node(cal)
+                cal_stack.append(cal_node)
+            elif char == "/":
+                cal = float(cal_left.value) / float(cal_right.value)
+                cal_node = Node(cal)
+                cal_stack.append(cal_node)
+
+    print("root --> [", stack.pop().value, "]")
+    print("\n계산결과 :", cal_stack.pop().value)
+
+create_expression_tree("((3*4)+(6-8))")
+```
