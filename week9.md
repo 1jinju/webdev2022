@@ -114,3 +114,46 @@ void CImageProcessingSKView::OnUpSampling()
 	Invalidate(TRUE); // 화면 갱신
 }
 ```
+
+# 2022.11.02(수)
+
+## 양자화
+
+표본화된 화소의 밝기나 색상을 정해진 몇 단계의 값으로 근사화 하는 과정
+화소의 밝기나 색상이 숫자로 표현되어 화소는 양자화된 표본 값을 갖게 됨
+밝기나 색상이 몇 단계로 표현되느냐는 양자화 비트(Quantization Bits)로 결정됨
+
+```cpp
+void CImageProcessingDoc::OnQuantization()
+{
+	CQuantizationDlg dlg;
+	if(dlg.DoModal() == IDOK)
+	// 양자화 비트 수를 결정하는 대화상자의 활성화 여부
+	{
+		int i, j, value, LEVEL;
+		double HIGH, *TEMP;
+		m_Re_height = m_height;
+		m_Re_width = m_width;
+		m_Re_size = m_Re_height * m_Re_width;
+		m_OutputImage = new unsigned char[m_Re_size];
+		// 양자화 처리된 영상을 출력하기 위한 메모리 할당
+		TEMP = new double [m_size];
+		// 입력 영상 크기(m_size)와 동일한 메모리 할당
+		LEVEL=256; // 입력 영상의 양자화 단계(28=256)
+		HIGH=256;
+		value = (int)pow(2, dlg.m_QuantBit);
+		// 양자화 단계 결정(예 : 24=16)
+		for(i=0 ; i<m_size ; i++){
+			for(j=0 ; j<value ; j++){
+				if(m_InputImage[i] >=(LEVEL/value)*j &&	m_InputImage[i]<(LEVEL/value)*(j+1)){
+					TEMP[i]=(double)(HIGH/value)*j; // 양자화 수행
+				}
+			}
+		}
+		for(i=0 ; i<m_size ; i++){
+			m_OutputImage[i] = (unsigned char)TEMP[i];
+			// 결과 영상 생성
+		}
+	}
+}
+```
