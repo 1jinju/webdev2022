@@ -73,7 +73,9 @@ void CImageProcessingView::OnDraw(CDC* pDC)
 }
 ```
 # 2022.11.01(화)
-## 업샘플링(Up Sampling)
+
+## 디지털영상처리
+### 업샘플링(Up Sampling)
 영상을 확대할 때는 먼저 일정한 배열 간격으로 재배열해야 하는 것
 단순 업 샘플링을 사용하여 영상을 확대하면 영상의 품질이 현저히 떨어짐
 영상을 확대해도 선명한 품질을 얻고 싶다면 업 샘플링으로 얻은 데이터와 원본 영상의 데이터를 이용하여 보간(Interpolation)을 해야 함
@@ -155,5 +157,84 @@ void CImageProcessingDoc::OnQuantization()
 			// 결과 영상 생성
 		}
 	}
+}
+```
+
+# 2022.11.03(목)
+## 디지털영상처리
+### MFC를 이용한 파일 입출력 프로그램
+    
+```cpp
+// Doc 클래스의 OnOpenDocument(파일 입력, 열기)
+BOOL CImageprocessingskDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
+	CFile File; // 파일 객체 선언
+	File.Open(lpszPathName, CFile::modeRead | CFile::typeBinary);
+	// 파일 열기 대화상자에서 선택한 파일을 지정하고 읽기 모드 선택
+	// 이 책에서는 영상의 크기 256*256, 512*512, 640*480만을 사용한다.
+	if(File.GetLength() == 256*256){ // RAW 파일의 크기 결정
+		m_height = 256;
+		m_width = 256;
+	}
+	else if(File.GetLength() == 512*512){ // RAW 파일의 크기 결정
+		m_height = 512;
+		m_width = 512;
+	}
+	else if(File.GetLength() == 640*480){ // RAW 파일의 크기 결정
+		m_height = 480;
+		m_width = 640;
+	}
+	else{
+		AfxMessageBox("Not Support Image Size"); // 해당 크기가 없는 경우
+		return 0;
+	}
+	m_size = m_width * m_height; // 영상의 크기 계산
+	m_InputImage = new unsigned char [m_size];
+	// 입력 영상의 크기에 맞는 메모리 할당
+	for(int i = 0 ; i<m_size ; i++)
+		m_InputImage[i] = 255; // 초기화
+	File.Read(m_InputImage, m_size); // 입력 영상 파일 읽기
+	File.Close(); // 파일 닫기
+	return TRUE;
+}
+```
+
+```cpp
+// View 클래스의 OnDraw(영상 출력)
+void CImageprocessingskView::OnDraw(CDC* pDC)
+{
+	CImageProcessingDoc* pDoc = GetDocument(); // 도큐먼트 클래스 참조
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+	int i, j;
+	unsigned char R, G, B;
+	for(i=0 ; i<pDoc->m_height ; i++){
+		for(j=0 ; j<pDoc->m_width ; j++){
+			R = G = B = pDoc->m_InputImage[i*pDoc->m_width+j];
+			pDC->SetPixel(j+5, i+5, RGB(R, G, B));
+		}
+	}
+}
+```
+
+```cpp
+// Doc 클래스의 OnSaveDocument(파일 출력, 저장)
+BOOL CImageprocessingSKDoc::OnSaveDocument(LPCTSTR lpszPathName)
+{
+	CFile File; // 파일 객체 선언
+	CFileDialog SaveDlg(FALSE, "raw", NULL, OFN_HIDEREADONLY);
+	// raw 파일을 다른 이름으로 저장하기를 위한 대화상자 객체 선언
+	if (SaveDlg.DoModal() == IDOK) {
+		// DoModal 멤버 함수에서 저장하기 수행
+		File.Open(SaveDlg.GetPathName(), CFile::modeCreate |
+		CFile::modeWrite);
+		// 파일 열기
+		File.Write(m_InputImage, m_size); // 파일 쓰기
+		File.Close(); // 파일 닫기
+	}
+	return CDocument::OnSaveDocument(lpszPathName);
 }
 ```
