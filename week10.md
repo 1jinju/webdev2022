@@ -14,3 +14,18 @@ for i in alpha:
     else:
         print(-1, end=' ')
 ```
+
+# 2022.11.08(화)
+## [Python][백준 2675번] 문자열 반복
+```Python
+t = int(input())
+lst = []
+for i in range(t):
+    s = input().split()
+    lst = list(s[1])
+    for i in range(len(lst)):
+        lst[i] = lst[i] * int(s[0])
+    lst = ''.join(lst)
+    print(lst)
+    lst = []
+```
