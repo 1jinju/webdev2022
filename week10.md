@@ -29,3 +29,22 @@ for i in range(t):
     print(lst)
     lst = []
 ```
+# 2022.11.09(수)
+## [Python][백준 8958번] OX퀴즈
+```Python
+import sys
+n = int(input())
+count = 0
+score = 0
+for i in range(n):
+    count = 0
+    score = 0
+    a = sys.stdin.readline()
+    for j in a:
+        if j == "O":
+            count += 1
+        else:
+            score += count*(count+1)//2
+            count = 0   
+    print(score)
+```
