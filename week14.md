@@ -92,3 +92,69 @@ void CImageProcessingView::OnFrameSum()
     Invalidate(TRUE);
 }
 ```
+
+# 2022.12.08(목)
+
+### 뺄셈연산을 이용한 프레임 처리
+
+- 한 영상에서 다른 영상의 값을 빼서 두 영상 사이의 차이를 결정하는 프레임 처리
+- 영상의 변화를 검출하는 데 효율적
+- 똑같은 장면을 다른 시간대에서 촬영해 얻은 영상을 뺄셈 처리하여 대상체를 식별하는 방법
+	- 배경제거
+	- 감시 시스템
+	- 조립 라인의 검사 시스템
+	- 불필요하게 추가되는 잡음제거 등을 응용하는 데 사용됨
+
+```cpp
+void CImageProcessing2020108274Doc::OnFrameSub()
+{
+	CFile File;
+	CFileDialog OpenDlg(TRUE);
+
+	AlphaDlg dlg;
+
+	int i;
+
+	m_Re_height = m_height;
+	m_Re_width = m_width;
+	m_Re_size = m_Re_height * m_Re_width;
+
+	m_OutputImage = new unsigned char[m_Re_size];
+
+	if (dlg.DoModal() == IDOK) { // 다이얼로그의 확인 버튼을 눌렀을 때
+		if (OpenDlg.DoModal() == IDOK) {
+			File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+
+			if (File.GetLength() == (unsigned)m_width * m_height) {
+				m_InputImage2 = new unsigned char[m_size]; // 두 번째 입력 영상를 위한 메모리 할당
+				File.Read(m_InputImage2, m_size);
+				File.Close();
+
+				// 프레임 간에 픽셀 대 픽셀로 뺄셈연산 실행
+				for (i = 0; i < m_size; i++) {
+					if (m_InputImage[i] * dlg.m_alpha - m_InputImage2[i] * (1 - dlg.m_alpha) < 0)
+						m_OutputImage[i] = 0;
+					else
+						m_OutputImage[i] = m_InputImage[i] * dlg.m_alpha - m_InputImage2[i] * (1 - dlg.m_alpha);
+				}
+			}
+
+			else {
+				AfxMessageBox("Image size not matched");
+				return;
+			}
+		}
+	}
+}
+```
+
+```cpp
+void CImageProcessingView::OnFrameSub()
+{
+	CImageProcessingDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	pDoc->OnFrameSub();
+	Invalidate(TRUE);
+}
+
+```
