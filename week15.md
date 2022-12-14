@@ -27,3 +27,17 @@
     - Random?: 주어진 범위 내에서 무작위 크기의 나무
 - Lock Width to Height: 나무 너비와 높이의 비율을 항상 유지
 - Random Tree Rotation: 무작위 방향으로 나무를 회전
+
+# 2022.12.13(수)
+
+### 스카이박스(Skyboxes)
+- 전체 씬을 둘러싸는 래퍼로 지오메트리 너머의 월드가 어떻게 생겼는지를 보여줌
+- SkyBox는 가상의 환경을 Box로 감싸 적절한 텍스쳐를 바인딩 하여 가상의 환경을 만드는 기술
+- 하늘, 우주 등 용도에 맞는 이미지를 이용하여 여러 가지 스타일의 가상 환경을 제작하는데 용이
+
+### FPSController
+#### Controls
+- Keyboard + MouseMovement: WASD / Arrow Keys
+- Look: Mouse Cursor
+- Sprint: Left Shift [HOLD]
+- Jump: Spacebar
