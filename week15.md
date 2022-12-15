@@ -41,3 +41,19 @@
 - Look: Mouse Cursor
 - Sprint: Left Shift [HOLD]
 - Jump: Spacebar
+
+# 2022.12.15(목)
+
+## RigidbodyConstraints
+Rigidbody가 추가된 물체의 움직임에 제약을 부여(물리적인 반응에 대한 움직임만 해당)  
+Translate() 적용 가능  
+- FreezePosition
+- FreezeRotation
+- FreezeAlll: 물체의 이동과 회전 전부 금지
+예) other.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
+# WebGL
+플러그인을 사용하지 않고 OpenGL ES 2.0기반 API를 이용하여 브라우저의 HTML canvas에 렌더링하여 3D 웹 콘텐츠 제작이 가능함  
+게임을 웹에서 실행할 수 있도록 해줌  
+WebGL 프로그램은 컴퓨터의 GPU에서 실행'되는 자바스크립트나 특수효과코드(셰이더 코드)로 구성됨  
+WebGL 요소들은 다른 HTML 요소와 혼합될 수 있고 다른 부분과 합성될 수 있음  
